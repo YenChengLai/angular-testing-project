@@ -54,6 +54,17 @@ describe('UserComponent', () => {
     const dataService = fixture.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails').and.returnValue(Promise.resolve('Data'));
     fixture.detectChanges();
-    expect(app.data).toBe('Data');
+    expect(app.data).toBe(undefined);
   });
+
+  it('should fetch data successfully if called asynchronously', async(() => {
+    fixture = TestBed.createComponent(UserComponent);
+    const app = fixture.debugElement.componentInstance;
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(Promise.resolve('Data'));
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(app.data).toBe('Data');
+    });
+  }));
 });
