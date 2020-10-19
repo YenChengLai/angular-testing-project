@@ -1,3 +1,4 @@
+import { DataService } from './../shared/data.service';
 import { UserService } from './user.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -45,5 +46,14 @@ describe('UserComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('p').textContent).not.toContain(component.user.name);
+  });
+
+  it('shouldn\'t fetch data successfully if not called asynchronously', () => {
+    fixture = TestBed.createComponent(UserComponent);
+    const app = fixture.debugElement.componentInstance;
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(Promise.resolve('Data'));
+    fixture.detectChanges();
+    expect(app.data).toBe('Data');
   });
 });
