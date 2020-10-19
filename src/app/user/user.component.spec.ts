@@ -1,6 +1,6 @@
 import { DataService } from './../shared/data.service';
 import { UserService } from './user.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { UserComponent } from './user.component';
 
@@ -57,14 +57,13 @@ describe('UserComponent', () => {
     expect(app.data).toBe(undefined);
   });
 
-  it('should fetch data successfully if called asynchronously', async(() => {
+  it('should fetch data successfully if called asynchronously', fakeAsync(() => {
     fixture = TestBed.createComponent(UserComponent);
     const app = fixture.debugElement.componentInstance;
     const dataService = fixture.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails').and.returnValue(Promise.resolve('Data'));
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(app.data).toBe('Data');
-    });
+    tick(); // tick means finish all asynchronous task now in a fake async environment.
+    expect(app.data).toBe('Data');
   }));
 });
